@@ -1,0 +1,356 @@
+# GovKH Search source registry: the whitelist of official domains (proposal 5.1, 6.2).
+#
+# The crawler only requests hosts listed here (`domains`, plus `extra_file_hosts` for downloads).
+# Run `python -m govkh_crawler audit` to refresh reachability, robots.txt and estimated counts.
+#
+# Fields
+#   id, institution, institution_km, domains   required identity; a domain may carry a scheme
+#   enabled            false = registered and audited, but not crawled
+#   priority           higher wins when the same document is found twice (issuer site > archive)
+#   press              true = mostly press releases / activity news (see settings.include_press)
+#   default_doc_type   legal_instrument | announcement | procedure | report | form_fee
+#   reuse_status       open | unclear | restricted ("unclear" = excerpts and links only)
+#   translation_url_pattern   regex of the language path segment; links Khmer/English versions
+#   exclude            URL regexes never requested
+#   adapters           how documents are found: sitemap | wordpress | ckan | crawl
+#
+# Status of every entry below was checked on 2026-11-14 with the crawler's own User-Agent.
+
+sources:
+  # ---------------------------------------------------------------- legal instruments
+  - id: odc_laws
+    # Used only when the archive does not name the issuing agency; otherwise the record carries it.
+    institution: Royal Government of Cambodia (issuing body not recorded by the archive)
+    domains: [data.opendevelopmentcambodia.net]
+    extra_file_hosts: [data.opendevelopmentmekong.net]
+    priority: 5
+    default_doc_type: legal_instrument
+    reuse_status: unclear        # per record: "open" where the catalogue states a CC licence
+    adapters:
+      - type: ckan
+        api: https://data.opendevelopmentcambodia.net/api/3/action
+        fq: "type:laws_record AND extras_odm_spatial_range:*kh*"
+        dataset_url: "https://data.opendevelopmentcambodia.net/laws_record/{name}"
+    notes: >
+      Trusted archive hosting original files of Cambodian legal instruments, with document number,
+      type, promulgation date, status and issuing agency per record. Drafts are rejected.
+
+  - id: gdt
+    institution: General Department of Taxation
+    institution_km: អគ្គនាយកដ្ឋានពន្ធដារ
+    domains: [www.tax.gov.kh]
+    default_language: km
+    default_doc_type: legal_instrument
+    file_url_patterns: ["/gdtstream/"]      # extension-less download links
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://www.tax.gov.kh/kh/law
+          - https://www.tax.gov.kh/kh/prakas
+          - https://www.tax.gov.kh/kh/circular
+          - https://www.tax.gov.kh/kh/decision
+          - https://www.tax.gov.kh/kh/instruction
+          - https://www.tax.gov.kh/kh/notice
+          - https://www.tax.gov.kh/kh/appendix
+          - https://www.tax.gov.kh/kh/document-form
+          - https://www.tax.gov.kh/en/law
+          - https://www.tax.gov.kh/en/prakas
+          - https://www.tax.gov.kh/en/circular
+          - https://www.tax.gov.kh/en/notice
+        allow: ["/(kh|en)/(law|prakas|circular|decision|instruction|notice|appendix|document-form)(/page/\\d+)?$"]
+        pagination: ["/page/\\d+$"]
+        max_depth: 1
+        max_pages: 4000
+    notes: >
+      Article pages are filled by JavaScript, but the listing pages for each instrument type are
+      server-rendered and link straight to the files (/gdtstream/<id>), with Khmer and English versions.
+
+  - id: gdce
+    institution: General Department of Customs and Excise
+    institution_km: អគ្គនាយកដ្ឋានគយនិងរដ្ឋាករកម្ពុជា
+    domains: [www.customs.gov.kh]
+    default_language: km
+    default_doc_type: legal_instrument
+    render: true                             # pages are built by JavaScript from api.customs.gov.kh
+    extra_file_hosts: [api.customs.gov.kh]
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://www.customs.gov.kh/laws-and-regulations
+          - https://www.customs.gov.kh/announcements
+          - https://www.customs.gov.kh/publications
+          - https://www.customs.gov.kh/customs-procedures
+        allow: ["/(laws-and-regulations|announcements|publications|customs-procedures)"]
+        doc_page_patterns: ["/(laws-and-regulations|announcements|publications|customs-procedures)/\\d+-"]
+        pagination: ["[?&]page=\\d+"]
+        max_depth: 4
+
+  - id: ccc
+    institution: Constitutional Council of Cambodia
+    institution_km: ក្រុមប្រឹក្សាធម្មនុញ្ញ
+    domains: [www.ccc.gov.kh]
+    default_language: km
+    default_doc_type: legal_instrument
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://www.ccc.gov.kh/decision_kh.php
+          - https://www.ccc.gov.kh/notification_kh.php
+        allow: ["/(decision|notification|detail_decision|detail_notification|detail_info)[^/]*\\.php"]
+        doc_page_patterns: ["/detail_(decision|notification|info)[^/]*\\.php\\?"]
+        max_depth: 5
+
+  # ---------------------------------------------------------------- ministries (WordPress REST)
+  - id: mptc
+    institution: Ministry of Post and Telecommunications
+    institution_km: ក្រសួងប្រៃសណីយ៍និងទូរគមនាគមន៍
+    domains: [mptc.gov.kh]
+    default_language: km
+    adapters:
+      - type: wordpress
+        apis: [{url: "https://mptc.gov.kh/wp-json/wp/v2"}]
+
+  - id: mrd
+    institution: Ministry of Rural Development
+    institution_km: ក្រសួងអភិវឌ្ឍន៍ជនបទ
+    domains: [mrd.gov.kh]
+    default_language: km
+    press: true
+    adapters:
+      - type: wordpress
+        apis: [{url: "https://mrd.gov.kh/wp-json/wp/v2"}]
+      - type: sitemap                        # the posts API answers 500; the sitemap lists the posts
+        exclude: ["/category/", "/tag/", "/author/"]
+
+  - id: moe
+    institution: Ministry of Environment
+    institution_km: ក្រសួងបរិស្ថាន
+    domains: [moe.gov.kh]
+    default_language: km
+    adapters:
+      - type: wordpress
+        apis: [{url: "https://www.moe.gov.kh/wp-json/wp/v2"}]
+
+  - id: ocm_press
+    institution: Office of the Council of Ministers (Press and Quick Reaction Unit)
+    institution_km: ទីស្តីការគណៈរដ្ឋមន្ត្រី
+    domains: [pressocm.gov.kh]
+    default_language: km
+    press: true
+    adapters:
+      - type: wordpress
+        apis:
+          - {url: "https://pressocm.gov.kh/wp-json/wp/v2", language: km}
+          - {url: "https://pressocm.gov.kh/en/wp-json/wp/v2", language: en}
+
+  - id: senate
+    institution: Senate of the Kingdom of Cambodia
+    institution_km: ព្រឹទ្ធសភា
+    domains: [senate.gov.kh]
+    default_language: km
+    enabled: false
+    press: true
+    page_images: false
+    notes: >
+      Reachable (about 13,400 posts), but the pilot shows activity news posted as photo galleries with
+      almost no text. Outside the document types of the proposal; enable only if the team decides otherwise.
+    adapters:
+      - type: wordpress
+        apis: [{url: "https://www.senate.gov.kh/wp-json/wp/v2"}]
+
+  - id: mlmupc
+    institution: Ministry of Land Management, Urban Planning and Construction
+    institution_km: ក្រសួងរៀបចំដែនដី នគរូបនីយកម្ម និងសំណង់
+    domains: [mlmupc.gov.kh]
+    default_language: km
+    adapters:
+      - type: sitemap           # the REST API answers 403; the WordPress sitemap is open
+        urls: [https://mlmupc.gov.kh/wp-sitemap.xml]
+        exclude: ["/category/", "/tag/", "/author/"]
+
+  # ---------------------------------------------------------------- ministries (listing crawl)
+  - id: mpwt
+    institution: Ministry of Public Works and Transport
+    institution_km: ក្រសួងសាធារណការនិងដឹកជញ្ជូន
+    domains: [www.mpwt.gov.kh]
+    default_language: km
+    default_doc_type: procedure
+    translation_url_pattern: "/(kh|en)/"
+    notes: Many official documents are embedded Google Drive previews, which are off the whitelist; the service and press pages are plain HTML.
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://www.mpwt.gov.kh/kh/documents
+          - https://www.mpwt.gov.kh/kh/public-services
+          - https://www.mpwt.gov.kh/kh/press
+        allow: ["/(kh|en)/(documents|public-services|press)"]
+        doc_page_patterns: ["/(kh|en)/(documents|public-services|press)/.+/\\d+$", "/(kh|en)/(documents|public-services|press)/[^/]+/[^/]+/[^/]+"]
+        max_depth: 5
+
+  - id: moh
+    institution: Ministry of Health
+    institution_km: ក្រសួងសុខាភិបាល
+    domains: [moh.gov.kh]
+    default_language: km
+    translation_url_pattern: "/(kh|en)/"
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://moh.gov.kh/kh/documents
+          - https://moh.gov.kh/kh/notice
+        allow: ["/(kh|en)/(documents|notice)"]
+        doc_page_patterns: ["/(kh|en)/(documents|notice)/.*\\d+"]
+        max_depth: 5
+
+  - id: mlvt
+    institution: Ministry of Labour and Vocational Training
+    institution_km: ក្រសួងការងារ និងបណ្តុះបណ្តាលវិជ្ជាជីវៈ
+    domains: [www.mlvt.gov.kh]
+    default_language: km
+    enabled: false
+    notes: The document sections (ឯកសារផ្លូវការ) answered HTTP 500 during the audit. Retry later; ODC holds the labour instruments meanwhile.
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://www.mlvt.gov.kh/index.php/ឯកសារផ្លូវការ
+          - https://www.mlvt.gov.kh/index.php/របាយការណ៍និងព្រឹត្តិបត្រ
+        allow: ["/index\\.php/"]
+        deny: ["/index\\.php/(en|អំពីក្រសួង|component|itemlist/(user|tag))", "format=feed", "tmpl=component", "print=1"]
+        doc_page_patterns: ["/index\\.php/.+/\\d+-[^/]*\\.html$", "/item/\\d+"]
+        max_depth: 5
+
+  - id: moc
+    institution: Ministry of Commerce
+    institution_km: ក្រសួងពាណិជ្ជកម្ម
+    domains: [moc.gov.kh]
+    default_language: km
+    render: true                             # document lists are loaded by JavaScript
+    extra_file_hosts: [s2.moc.gov.kh]        # the ministry's file server
+    translation_url_pattern: "/(kh|en-US)/"
+    adapters:
+      - type: crawl
+        start_urls:
+          - https://www.moc.gov.kh/kh/document-category/official-document
+          - https://www.moc.gov.kh/kh/document-category/annual-meeting-report
+          - https://www.moc.gov.kh/kh/document-category/special-economic-zone
+          - https://www.moc.gov.kh/kh/document-category/projects
+          - https://www.moc.gov.kh/kh/document-category/bulletin
+          - https://www.moc.gov.kh/kh/news
+        allow: ["/(kh|en-US)/(document-category|news)"]
+        doc_page_patterns: ["/(kh|en-US)/(news|post)/[^/?]+$"]
+        pagination: ["[?&]page=\\d+"]
+        max_depth: 4
+    notes: Rendered in a headless browser; robots.txt disallows /api/, and the browser's own API calls are the site's normal page load.
+
+  - id: maff
+    institution: Ministry of Agriculture, Forestry and Fisheries
+    institution_km: ក្រសួងកសិកម្ម រុក្ខាប្រមាញ់ និងនេសាទ
+    domains: [www.maff.gov.kh]
+    default_language: km
+    extra_file_hosts: [mptccloud.gov.kh]     # government cloud storage that serves the ministry's PDFs
+    adapters:
+      - type: crawl
+        start_urls: [https://www.maff.gov.kh/documentcategories]
+        allow: ["/documentcategor(ies|y)"]
+        deny: ["lang=en"]
+        pagination: ["/documentcategory/[^/?]+/\\d+"]
+        max_depth: 3
+
+  - id: mme
+    institution: Ministry of Mines and Energy
+    institution_km: ក្រសួងរ៉ែ និងថាមពល
+    domains: [mme.gov.kh]
+    default_language: km
+    adapters:
+      - type: crawl             # the sitemap URLs carry ?cHash, which the site's own robots.txt disallows
+        start_urls:
+          - https://mme.gov.kh/resources/rules-and-regulations
+          - https://mme.gov.kh/newsroom/all-news
+          - https://mme.gov.kh/km/
+        allow: ["/(km/)?(resources|newsroom|strategic-sectors)"]
+        doc_page_patterns: ["/newsroom/all-news/[^/?]+$", "/newsroom/[^/?]+/[^/?]+$"]
+        max_depth: 5
+
+  - id: phnompenh
+    institution: Phnom Penh Capital Administration
+    institution_km: រដ្ឋបាលរាជធានីភ្នំពេញ
+    domains: [phnompenh.gov.kh]
+    default_language: km
+    press: true
+    adapters:
+      - type: crawl
+        start_urls: [https://phnompenh.gov.kh/news-press-releases/]
+        allow: ["/(news-press-releases|general-knowledge)/"]
+        doc_page_patterns: ["/(news-press-releases|general-knowledge)/post/"]
+        max_depth: 6
+
+  # ---------------------------------------------------------------- registered, not crawlable today
+  - id: mef
+    institution: Ministry of Economy and Finance
+    domains: [mef.gov.kh]
+    default_language: km
+    enabled: false
+    notes: Answers 403 to every request from a declared crawler, robots.txt included. Not bypassed; ask the ministry or rely on ODC and GDT.
+
+  - id: nbc
+    institution: National Bank of Cambodia
+    domains: [www.nbc.gov.kh]
+    default_language: km
+    enabled: false
+    notes: Answers 403 to a declared crawler. Not bypassed.
+
+  - id: moi
+    institution: Ministry of Interior
+    domains: [www.interior.gov.kh]
+    default_language: km
+    enabled: false
+    notes: robots.txt allows search use (Content-Signal search=yes, ai-train=no) but the pages sit behind a 403 bot challenge.
+
+  - id: trc
+    institution: Telecommunication Regulator of Cambodia
+    domains: [trc.gov.kh]
+    default_language: km
+    enabled: false
+    notes: robots.txt allows all, but pages and the sitemap answer 403 to a declared crawler.
+
+  - id: moeys
+    institution: Ministry of Education, Youth and Sport
+    institution_km: ក្រសួងអប់រំ យុវជន និងកីឡា
+    domains: [moeys.gov.kh]
+    default_language: km
+    default_doc_type: legal_instrument
+    adapters:
+      - type: moeys
+        api: https://moeys.gov.kh/api/v1/web/get-lawlegislation-category
+        file_base: https://moeys.gov.kh/
+    notes: Client-rendered site; its own JSON API lists every legal document with a direct file path.
+
+  - id: nssf
+    institution: National Social Security Fund
+    domains: [www.nssf.gov.kh]
+    default_language: km
+    enabled: false
+    notes: Client-rendered application with no crawlable links; needs a site-specific API adapter.
+
+  - id: mfaic
+    institution: Ministry of Foreign Affairs and International Cooperation
+    domains: [www.mfaic.gov.kh]
+    default_language: km
+    enabled: false
+    notes: Every path returns a JavaScript challenge page.
+
+  - id: nis
+    institution: National Institute of Statistics
+    domains: [www.nis.gov.kh]
+    default_language: km
+    enabled: false
+    default_doc_type: report
+    notes: Host did not accept connections during the audit; retry later.
+
+  - id: national_assembly
+    institution: National Assembly of Cambodia
+    domains: [www.national-assembly.org.kh]
+    default_language: km
+    enabled: false
+    default_doc_type: legal_instrument
+    notes: Host did not accept connections during the audit; retry later.

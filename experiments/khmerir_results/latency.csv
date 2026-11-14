@@ -1,0 +1,7 @@
+system,family,ms_per_query
+TF-IDF / normalized,lexical,0.7855302860012411
+BM25 / normalized,lexical,0.03709600007693682
+TF-IDF / segmented,lexical,0.7797532858343662
+BM25 / segmented,lexical,0.06152071416311498
+EmbeddingGemma2 / normalized (cuda),dense,39.493422002124134
+Qwen3-VL-Embedding-2B / normalized (cpu),dense,1439.7784210013924

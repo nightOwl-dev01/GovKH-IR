@@ -1,0 +1,36 @@
+{
+  "packages": {
+    "torch": "2.15.0",
+    "transformers": "5.23.0",
+    "sentence-transformers": "6.3.0",
+    "huggingface_hub": "2.4.0",
+    "scikit-learn": "1.9.1",
+    "rank-bm25": "0.2.2",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6",
+    "khmer-nltk": "1.6",
+    "pillow": "12.3.0"
+  },
+  "python": "3.14.10 (main, Nov  4 2026, 18:21:50) [GCC 16.2.1 20260810]",
+  "platform": "Linux-7.2.3-arch1-2-x86_64-with-glibc2.44",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce GTX 1650",
+  "data_source": "built-in demo corpus",
+  "segmenter": "khmer-nltk",
+  "models": {
+    "EmbeddingGemma2": {
+      "model_id": "google/embeddinggemma-2",
+      "revision": "f9972ac22e696a105c482202646979e33e4b5a1e",
+      "device": "cuda",
+      "dtype": "float32",
+      "dimensions": "768"
+    },
+    "Qwen3-VL-Embedding-2B": {
+      "model_id": "Qwen/Qwen3-VL-Embedding-2B",
+      "revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+      "device": "cpu",
+      "dtype": "bfloat16",
+      "dimensions": "2048"
+    }
+  }
+}

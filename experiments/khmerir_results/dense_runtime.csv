@@ -1,0 +1,3 @@
+model,device,dtype,dimensions,text_encode_s,image_encode_s,ms_per_query,peak_gpu_GiB,process_rss_GiB
+EmbeddingGemma2,cuda,float32,768,0.59,4.46,39.493422002124134,1.78,4.71
+Qwen3-VL-Embedding-2B,cpu,bfloat16,2048,143.84,97.72,1439.7784210013924,0.0,5.56

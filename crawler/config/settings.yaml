@@ -1,0 +1,36 @@
+# GovKH Search crawler settings. Every key is optional; defaults live in govkh_crawler/config.py.
+
+bot_name: GovKHSearchBot
+bot_version: "0.1"
+bot_description: "academic IR course project; polite crawler"
+# Shown to site operators in the User-Agent so they can reach the team. Set this before the
+# full crawl (a team e-mail address or a project page URL).
+contact: ""
+
+data_dir: data            # relative to the crawler folder; holds state, originals, manifest, reports
+
+# Politeness (proposal 8.1)
+default_delay: 1.0        # seconds between requests to the same host
+max_crawl_delay: 30.0     # upper bound honoured for robots.txt Crawl-delay
+respect_robots: true
+timeout: 45.0
+max_retries: 4            # per request; exponential backoff, honours Retry-After
+backoff_base: 2.0
+max_backoff: 120.0
+max_attempts: 5           # per URL across runs, before it is marked failed
+host_fail_limit: 8        # consecutive failures before a host is paused for the run
+max_bytes: 104857600      # 100 MB; larger files are skipped and logged
+
+# Incremental crawl
+recrawl_days: 7
+
+# Eligibility and deduplication
+thin_text_chars: 300      # an HTML page with less text is "thin"
+landing_text_chars: 600   # a page with less text that has attachments is only a landing page
+scanned_chars_per_page: 50
+near_dup_threshold: 0.9
+include_press: true       # press releases / activity news: decided after the Week 1 audit (proposal 6.3)
+download_page_images: true
+max_page_images: 10
+
+corpus_target: 10001

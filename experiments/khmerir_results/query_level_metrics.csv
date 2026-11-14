@@ -1,0 +1,78 @@
+system,query_id,recall,precision,mrr,ndcg
+TF-IDF / normalized,Q001,0.0,0.0,0.0,0.0
+TF-IDF / normalized,Q002,1.0,0.2,1.0,1.0
+TF-IDF / normalized,Q003,0.0,0.0,0.0,0.0
+TF-IDF / normalized,Q004,0.0,0.0,0.0,0.0
+TF-IDF / normalized,Q005,0.5,0.2,1.0,0.6131471927654584
+TF-IDF / normalized,Q006,0.0,0.0,0.0,0.0
+TF-IDF / normalized,Q007,0.0,0.0,0.0,0.0
+BM25 / normalized,Q001,0.0,0.0,0.0,0.0
+BM25 / normalized,Q002,1.0,0.2,1.0,1.0
+BM25 / normalized,Q003,0.0,0.0,0.0,0.0
+BM25 / normalized,Q004,0.0,0.0,0.0,0.0
+BM25 / normalized,Q005,0.5,0.2,1.0,0.6131471927654584
+BM25 / normalized,Q006,0.0,0.0,0.0,0.0
+BM25 / normalized,Q007,0.0,0.0,0.0,0.0
+TF-IDF / segmented,Q001,1.0,0.2,1.0,1.0
+TF-IDF / segmented,Q002,1.0,0.2,1.0,1.0
+TF-IDF / segmented,Q003,1.0,0.2,1.0,1.0
+TF-IDF / segmented,Q004,0.0,0.0,0.0,0.0
+TF-IDF / segmented,Q005,0.5,0.2,1.0,0.6131471927654584
+TF-IDF / segmented,Q006,0.0,0.0,0.0,0.0
+TF-IDF / segmented,Q007,1.0,0.2,1.0,1.0
+BM25 / segmented,Q001,1.0,0.2,1.0,1.0
+BM25 / segmented,Q002,1.0,0.2,1.0,1.0
+BM25 / segmented,Q003,1.0,0.2,1.0,1.0
+BM25 / segmented,Q004,0.0,0.0,0.0,0.0
+BM25 / segmented,Q005,0.5,0.2,1.0,0.6131471927654584
+BM25 / segmented,Q006,0.0,0.0,0.0,0.0
+BM25 / segmented,Q007,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / normalized,Q001,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / normalized,Q002,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / normalized,Q003,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / normalized,Q004,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / normalized,Q005,1.0,0.4,1.0,1.0
+EmbeddingGemma2 / normalized,Q006,1.0,0.6,1.0,0.8529278650606567
+EmbeddingGemma2 / normalized,Q007,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / normalized,Q001,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / normalized,Q002,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / normalized,Q003,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / normalized,Q004,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / normalized,Q005,1.0,0.4,1.0,1.0
+Qwen3-VL-Embedding-2B / normalized,Q006,1.0,0.6,1.0,0.9469024295259745
+Qwen3-VL-Embedding-2B / normalized,Q007,1.0,0.2,0.5,0.6309297535714575
+EmbeddingGemma2 / segmented,Q001,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / segmented,Q002,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / segmented,Q003,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / segmented,Q004,1.0,0.2,1.0,1.0
+EmbeddingGemma2 / segmented,Q005,1.0,0.4,1.0,1.0
+EmbeddingGemma2 / segmented,Q006,1.0,0.6,1.0,0.9674679834891693
+EmbeddingGemma2 / segmented,Q007,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / segmented,Q001,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / segmented,Q002,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / segmented,Q003,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / segmented,Q004,1.0,0.2,1.0,1.0
+Qwen3-VL-Embedding-2B / segmented,Q005,1.0,0.4,1.0,1.0
+Qwen3-VL-Embedding-2B / segmented,Q006,1.0,0.6,1.0,0.9674679834891693
+Qwen3-VL-Embedding-2B / segmented,Q007,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q001,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q002,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q003,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q004,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q005,1.0,0.4,1.0,1.0
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q006,1.0,0.6,1.0,0.8529278650606567
+Hybrid RRF (BM25-seg + EmbeddingGemma2),Q007,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q001,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q002,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q003,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q004,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q005,1.0,0.4,1.0,1.0
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q006,1.0,0.6,1.0,0.9469024295259745
+Hybrid RRF (BM25-seg + Qwen3-VL-Embedding-2B),Q007,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + all dense),Q001,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + all dense),Q002,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + all dense),Q003,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + all dense),Q004,1.0,0.2,1.0,1.0
+Hybrid RRF (BM25-seg + all dense),Q005,1.0,0.4,1.0,1.0
+Hybrid RRF (BM25-seg + all dense),Q006,1.0,0.6,1.0,0.9060254355346823
+Hybrid RRF (BM25-seg + all dense),Q007,1.0,0.2,1.0,1.0
