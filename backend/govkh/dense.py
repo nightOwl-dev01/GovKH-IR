@@ -38,9 +38,7 @@ def load_model(name: str = config.EMBED_MODEL, device: str | None = None):
     from sentence_transformers import SentenceTransformer
     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
     model = SentenceTransformer(name, device=device)
-    model.max_seq_length = MAX_TOKENS
-    if device == "cuda":
-        model.half()
+    model.max_seq_length = MAX_TOKENS  # float32: half precision is slower on the GTX 1650 (measured 1.0 vs 4.2 chunks/s)
     return model
 
 
